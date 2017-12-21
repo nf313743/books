@@ -84,12 +84,12 @@ namespace LaYumba.Functional
                () => None,
                (val) => Some(func(val))));
 
-      public static Option<Func<T2, R>> Apply<T1, T2, R>
-         (this Option<Func<T1, T2, R>> @this, Option<T1> arg)
+      public static Option<Func<T2, R>> Apply<T1, T2, R>(
+          this Option<Func<T1, T2, R>> @this, Option<T1> arg)
          => Apply(@this.Map(F.Curry), arg);
 
-      public static Option<Func<T2, T3, R>> Apply<T1, T2, T3, R>
-         (this Option<Func<T1, T2, T3, R>> @this, Option<T1> arg)
+      public static Option<Func<T2, T3, R>> Apply<T1, T2, T3, R>(
+          this Option<Func<T1, T2, T3, R>> @this, Option<T1> arg)
          => Apply(@this.Map(F.CurryFirst), arg);
 
       public static Option<R> Bind<T, R>

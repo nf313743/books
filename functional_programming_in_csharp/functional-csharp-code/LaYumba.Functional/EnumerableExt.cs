@@ -48,8 +48,8 @@ namespace LaYumba.Functional
          => ts.Aggregate(List<R>()
             , (rs, t) => rs.Concat(f(t)));
 
-      public static IEnumerable<R> Map<T, R>
-         (this IEnumerable<T> list, Func<T, R> func)
+      public static IEnumerable<R> Map<T, R>(
+          this IEnumerable<T> list, Func<T, R> func)
           => list.Select(func);
 
       public static R Match<T, R>(this IEnumerable<T> list
