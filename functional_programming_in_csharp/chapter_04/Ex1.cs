@@ -7,6 +7,14 @@ using System.Linq;
 
 namespace chapter_04
 {
+    /*
+    Implement Map for ISet<T> and IDictionary<K, T>. (Tip: start by writing down
+    the signature in arrow notation.)
+
+    Map : (C<T>, (T -> R)) -> C<R>
+    Bind : (C<T>, (T -> C<R>)) -> C<R>
+    Return : T -> C<T>
+     */
     [TestClass]
     public class Ex1_Test
     {
