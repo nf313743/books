@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Examples.Chapter3;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
@@ -21,6 +22,10 @@ namespace main
             // Taking an option, applying a function that can return anything
             // return the result wrapping in an Option.
             var result2 = optI.Map(x => x);
+
+            foreach(var i in  Enumerable.Range(1, 8))
+            {Console.WriteLine(i);
+            }
         }
     }
 }
