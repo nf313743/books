@@ -15,7 +15,9 @@ namespace chapter_05
             Func<int, int> RaiseBy10 = (x) => x * 10;
             Func<int, int> RaiseBy100 = (x) => x * 100;
 
-            var composedFunc = RaiseBy10.Compose(RaiseBy100).Compose(x => x / 2);
+            var composedFunc = RaiseBy10
+                                .Compose(RaiseBy100)
+                                .Compose(x => x / 2);
             Assert.AreEqual(2500, composedFunc(5));
 
         }
