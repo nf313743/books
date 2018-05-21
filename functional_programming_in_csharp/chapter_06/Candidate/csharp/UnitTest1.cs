@@ -6,11 +6,6 @@ namespace Tests
 {
     public class Tests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void Candidate_Pass()
         {
@@ -69,8 +64,6 @@ namespace Tests
 
     }
 
-
-
     class Candidate
     {
         public bool IsEligible { get; set; }
@@ -81,9 +74,7 @@ namespace Tests
     class Rejection
     {
         public Rejection(string reason)
-        {
-            Reason = reason;
-        }
+            => Reason = reason;
 
         public string Reason { get; }
     }
