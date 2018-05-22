@@ -23,9 +23,28 @@ namespace main
             // return the result wrapping in an Option.
             var result2 = optI.Map(x => x);
 
-            foreach(var i in  Enumerable.Range(1, 8))
-            {Console.WriteLine(i);
+        
+           Calc(3, 0)
+           .Bind(Calc(3,3))
+           .Match(
+              x=> Console.WriteLine(x),
+              y => Console.WriteLine(y)
+           );
+        }
+
+        static Either<string, double> Calc(double x, double y)
+        {
+            if(y == 0)
+            {
+                return "y cannot be 0";
             }
+
+            if(x!=0 && Math.Sign(x) != Math.Sign(y))
+            {
+                return "x / y cannot be negative";
+            }
+
+            return Math.Sqrt( x / y);
         }
     }
 }
