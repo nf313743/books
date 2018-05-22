@@ -35,6 +35,30 @@ public class Ex01
         
         Assert.AreEqual(result.GetType(), typeof(Pass) );
     }
+
+    [Test]
+    public void ToEither_IsSome_RightPath()
+    {
+        var result = Some(new Pass())
+                        .ToEither(() => new Fail())
+                        .Match(
+                            x => x.GetType(),
+                            y => y.GetType()
+                        );
+        Assert.AreEqual(typeof(Pass), result);
+    }
+
+    [Test]
+    public void ToEither_IsNone_Right_LeftPath()
+    {
+        var result = ((Option<Pass>)None)
+                        .ToEither(() => new Fail())
+                        .Match(
+                            x => x.GetType(),
+                            y => y.GetType()
+                        );
+        Assert.AreEqual(typeof(Fail), result);
+    }
 }
 
 public static class EitherExt2
@@ -45,9 +69,9 @@ public static class EitherExt2
             x => Some(x)
         );
 
-    public static Either<L, R> ToEither<L,R>(this Option<R> @this)
-        => @this.Match(
-            x => Left(default(L)),
+    public static Either<L, R> ToEither<L,R>(this Option<R> @this, Func<L> f)
+        => @this.Match<Either<L, R>>(
+            () => f(),
             y => Right(y)
-        )
+        );
 }
