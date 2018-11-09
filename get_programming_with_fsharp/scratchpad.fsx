@@ -1,95 +1,35 @@
-let printHelper x=
-    printfn "%A" x
+open System
+let myPrint x = printfn "%A" x
 
-type Address =
-    { Street: string
-      Town:string
-      City:string}
+type Customer = {Age:int}
+let whereFilter = 
+    
 
-type Customer =
-    { Forename:string
-      Surname:string
-      Age:int
-      Address:Address
-      EmailAddress:string
-    }
-
-let customer =
-    { Forename = "Joe"
-      Surname = "Bloggs"
-      Age = 30
-      Address = 
-        { Street = "The street"
-          Town = "The town"
-          City = "The city"}
-      EmailAddress = "joe@bloggs.com"
-    }
-
-
-type Car =
-    { 
-        Manufacturer:string
-        EngineSize:float
-        NumberOfDoors:int
-        Petrol: int
-    }
-let myCar = 
-    {
-        Manufacturer="Toyota"
-        EngineSize=1.1
-        NumberOfDoors = 4
-        Petrol = 100
-    }
-
-
-let updatedCustomer = 
-    {
-        customer with
-            Age = 31
-    }
-
-let address01 =
-    {
-        Address.City = "city"
-        Address.Street = "street"
-        Address.Town = "Town"
-    }
-let address02 =
-    {
-        Address.City = "city"
-        Address.Street = "street"
-        Address.Town = "Town"
-    }
-
-let randomNum =
-    (System.Random()).Next(0, 100)
-
-let customerWithRandomAge cust =
-    let newCust = 
-        {
-            cust with
-               Age = randomNum
+    
+    let where filter customers = 
+        seq {
+            for customer in customers do
+                if filter customer then
+                    yield customer
         }
-    newCust
 
-let shadowFn = 
-    let address03 =
-        {
-            Address.City = "city"
-            Address.Street = "street"
-            Address.Town = "Town"
-        }
-    let address03 = {address03 with City = "city02"}
-    printHelper address03.City
+    let customers = [{Age=21};{Age=35}; {Age= 36}]
+    let isOver35 customer = customer.Age > 35
+    customers |> where isOver35 |> myPrint
+    customers |> where (fun customer -> customer.Age > 34) |> myPrint
 
-shadowFn
+let printCustomerAge writer customer =
+    if customer.Age < 13 then writer "Child!"
+    elif customer.Age < 20 then writer "Teenager!"
+    else writer "Adult!"
 
-let drive car distance =
-    match distance with
-    | "far" -> {car with Car.Petrol =  car.Petrol / 2}
-    | "medium" -> {car with Car.Petrol =  car.Petrol - 10}
-    | _ -> {car with Car.Petrol =  car.Petrol - 1}
+printCustomerAge Console.WriteLine {Age =21}
 
-printHelper (drive myCar "far").Petrol
-printHelper (drive myCar "medium").Petrol
-printHelper (drive myCar "fsdfds").Petrol
+let printToConsole = printCustomerAge Console.WriteLine
+printToConsole {Age = 12}
+
+open System.IO
+
+let writeToFile text = File.WriteAllText("./output.txt", text)
+let printToFile = printCustomerAge writeToFile
+printToFile {Age = 21}
