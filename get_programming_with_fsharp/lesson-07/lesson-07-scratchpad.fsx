@@ -23,3 +23,4 @@ let printName =
     let spaceIndex = getName.IndexOf(' ')
     let firstName = getName.Substring(0, spaceIndex)
     printfn "First name: %s" firstName
+    

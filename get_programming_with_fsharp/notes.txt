@@ -11,3 +11,10 @@ In the BCL you can use tuples instead of 'out' paramters:
 Records use structural equality checking
 
 Everything with a record must be assigned on instantiation 
+
+Copy and update syntax:
+let updatedCustomer =
+    { customer with
+        Age = 31
+        EmailAddress = "joe@bloggs.co.uk" }      
+
