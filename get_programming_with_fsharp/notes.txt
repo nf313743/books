@@ -1,0 +1,13 @@
+# Lesson 09
+Tuple signature: type * type * type
+
+Discard them while deconstructing a tuple by assigning those parts to the underscore symbol: _. 
+
+Generic types are defined as 'a
+
+In the BCL you can use tuples instead of 'out' paramters:
+    let result, parsed = Int32.TryParse(number);
+
+Records use structural equality checking
+
+Everything with a record must be assigned on instantiation 
