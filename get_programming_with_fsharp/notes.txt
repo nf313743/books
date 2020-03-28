@@ -18,3 +18,12 @@ let updatedCustomer =
         Age = 31
         EmailAddress = "joe@bloggs.co.uk" }      
 
+
+#### Lesson 12
+Namespaces logically organise data types and modules
+Namespaces cannot hold functions
+Modules are like static classes in C#
+Modules do not need to be a part of a namespace
+
+
+[<AutoOpen>] attribute on the module can open modules automatically.
