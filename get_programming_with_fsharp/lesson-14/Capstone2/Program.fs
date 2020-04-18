@@ -1,6 +1,4 @@
-﻿// Learn more about F# at http://fsharp.org
-
-open System
+﻿open System
 open Capstone2.Domain
 open Capstone2.Operations
 open Capstone2.Auditing
