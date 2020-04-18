@@ -19,7 +19,11 @@ let updatedCustomer =
         EmailAddress = "joe@bloggs.co.uk" }      
 
 
-#### Lesson 12
+### Lesson 11
+The >> operator is used for composition.
+    This composes multiple functions into one funtion as long as the return/argument types match eg:
+        
+### Lesson 12
 Namespaces logically organise data types and modules
 Namespaces cannot hold functions
 Modules are like static classes in C#
@@ -27,3 +31,7 @@ Modules do not need to be a part of a namespace
 
 
 [<AutoOpen>] attribute on the module can open modules automatically.
+
+The >> operator is used for composition.
+    This composes multiple functions into one funtion as long as the return/argument types match eg:
+        
