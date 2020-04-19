@@ -34,4 +34,6 @@ Modules do not need to be a part of a namespace
 
 The >> operator is used for composition.
     This composes multiple functions into one funtion as long as the return/argument types match eg:
-        
+
+### Lesson 15
+Array elements can be reassigned. Lists cannot.
