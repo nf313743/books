@@ -3,71 +3,65 @@ module Capstone3.Program
 open System
 open Capstone3.Domain
 open Capstone3.Operations
-open Capstone3.FileRepository
 
-let commands = [ 'd'; 'w'; 'z'; 'f'; 'd'; 'x'; 'w' ]
-
-let printNewLine = Console.WriteLine ""
-let isValidCommand x =
-    match x with
-    | 'w' | 'd' | 'x' -> true
+let isValidCommand (command: char) =
+    match command with
+    | 'w'
+    | 'd'
+    | 'x' -> true
     | _ -> false
- 
-let isStopCommand x = x = 'x'
 
-let getAmountConsole command = 
-    Console.WriteLine ""
-    Console.Write "How much: "
-    let amount = Console.ReadLine() |> decimal
+let isStopCommand (command: char) = command = 'x'
+
+let getAmountConsole (command: char) =
+    Console.Write "\nEnter Amount: "
+    let amount = Decimal.Parse(Console.ReadLine())
+    (command, amount)
+
+
+let withdrawWithAudit =
+    auditAs "withdraw" Auditing.composedLogger withdraw
+
+let depositWithAudit =
+    auditAs "deposit" Auditing.composedLogger deposit
+
+
+let processCommand (account: Account) (command: char, amount: decimal) =
     match command with
-    | 'd' -> ('d', amount)
-    | 'w' -> ('w', amount)
-    | 'x' -> ('x', amount)
-    | _ -> (command, 0M)
+    | 'd' -> depositWithAudit amount account
+    | 'w' -> withdrawWithAudit amount account
+    | _ -> account
 
-let withdrawWithAudit = auditAs "w" Auditing.composedLogger withdraw
-let depositWithAudit = auditAs "d" Auditing.composedLogger deposit
 
-let processCommmand account command =
-    match command with
-    | 'd', amount -> depositWithAudit amount account
-    | 'w', amount -> withdrawWithAudit amount account
-    | _, _ -> account
-    
+let consoleCommands =
+    seq {
+        while true do
+            Console.Write "\n(d)eposit, (w)ithdraw or e(x)it: "
+            yield Console.ReadKey().KeyChar
+    }
+
 [<EntryPoint>]
 let main _ =
     let name =
         Console.Write "Please enter your name: "
         Console.ReadLine()
 
-    let customer = {Name = name}
-   
-    let getOpeningAccount customer =
-        let guid, transactions = findTransactionOnDisk customer.Name    
-        match (Seq.isEmpty transactions) with
-        | true -> { Owner = customer; Balance = 0M; AccountId = guid }
-        | false -> 
-                printfn "Loading account"
-                printfn "%i" (Seq.length transactions)
-                loadAccount customer guid (List.ofSeq transactions)
-   
-    let openingAccount = getOpeningAccount customer
+    let openingAccount =
+        let accountId, transactions =
+            FileRepository.findTransactionsOnDisk name
 
-    let consoleCommands = seq {
-        while true do
-            printNewLine
-            Console.Write "(d)eposit, (w)ithdraw or e(x)it: "
-            yield Console.ReadKey().KeyChar
-    }
+        loadAccount name accountId transactions
 
     let closingAccount =
         consoleCommands
         |> Seq.filter isValidCommand
-        |> Seq.takeWhile(not << isStopCommand)
+        |> Seq.takeWhile (not << isStopCommand)
         |> Seq.map getAmountConsole
-        |> Seq.fold processCommmand openingAccount
-        
+        |> Seq.fold processCommand openingAccount
+
+
     Console.Clear()
     printfn "Closing Balance:\r\n %A" closingAccount
     Console.ReadKey() |> ignore
+
     0
