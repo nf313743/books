@@ -62,21 +62,34 @@ let rules: Rule list =
 
 
 (*
-  Let's assume the firstRule fails. What is retured is a function: word -> (false, "Must be three words")
-  This is 'returned' to be used as the next first rule in the reduce. Because it was will
-  return false (along with the original error) when provided ANY string, it acts as 
-  a short circuit and secondRule is never evaluated.
+One the first iteration of the reduce firstRule and secondRule are 'baked' into the `fun word -> ` function.
+We'll refer to this as foo`1.  foo`1 is then used in the next iteration.  It is 'baked' firstRule and the secondRule in the list
+is 'baked' into second rule. What is returned is foo'2 (which has foo'1 as the firstRule).  As you iterate through the list
+the foo'n is 'baked' into the firstRule (apart from the very first iteration where the firstRule is the actual 1st rule from the 
+rules list), and secondRule is always the 'real' rule from the next iteration on the list.  The end result is a single rule
+with multiple function called embedded /baked into.
 
-Let's assume the firstRule passed. The second rule is then evaluated.  If that fails then you have the same
-situation as the first rule failing: return a function word -> (false, error) - which will now act as the short
--circuit.  However, if secondRule pass it return a function that always returns for any word: word -> (true, "").myPrint
-This is then used as the firstRule in the nextIteration and acts as an 'opposite short-circuit' (awalys returning true)
-so that the secondRule in the list iteration is evaluated.
+On the call to validate the firstRule function is called which will flow down the stack like the following:
+
+foo'3
+    => foo'2
+        => foo'1
+            => "Must be three words" rule
+
+When "Must be three words" rule is return the secondRule is called ("Max length is 30 characters")
+foo'3
+    => foo'2
+        => foo'1
+            => "Must be three words" rule -> true
+        => secondRule -> "Max length is 30 characters" -> true
+
+The calls will bubble-ups the call stack, and calling secondRule each time it goes up a level.
+
 *)
 let buildValidator (rules : Rule list) = 
     rules
     |> List.reduce(fun firstRule secondRule ->
-        fun word ->
+        fun word -> // foo
             let passed, error = firstRule word
             if passed then
                 let passed, error = secondRule word
